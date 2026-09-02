@@ -1,5 +1,9 @@
 # Flowkit
 
+[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](https://unlicense.org/)
+[![n8n](https://img.shields.io/badge/n8n-workflows-FF6D5A?logo=n8n&logoColor=white)](https://n8n.io/)  
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![Bash](https://img.shields.io/badge/Bash-Script-4EAA25?logo=gnubash&logoColor=white)](https://www.gnu.org/software/bash/)
 
 <img src="./media/logo.png" alt="logo" style="width:350px; height:310px;"/>
 
