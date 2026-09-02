@@ -46,11 +46,7 @@ Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-p
 First of all, generate a self signed TLS cert for your n8n istance:  
 
 ```bash
-mkdir certs && cd certs && openssl req -x509 -nodes -days 825 \
-  -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 \
-  -keyout flowkit.key -out flowkit.crt \
-  -subj "/CN=flowkit.local" \
-  -addext "subjectAltName=DNS:flowkit.local,DNS:localhost,IP:<your-LAN-IP>"
+bash scripts/create-certs.sh
 ```  
 
 > [!TIP]
@@ -86,7 +82,7 @@ bash scripts/deploy.sh
 
 
   
-Once the deployment has completed and n8n is ready, open your browser at `https://localhost:6789` and configure n8n user for UI authentication, for example:  
+Once the deployment has completed and n8n is ready, open your browser at `https://flowkit.local:6789` and configure n8n user for UI authentication, for example:  
 
 ![ui-user](./media/ui_user_registration.png)  
 

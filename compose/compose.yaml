@@ -23,7 +23,7 @@ services:
       postgres:
         condition: service_healthy
     ports:
-      - "127.0.0.1:6789:6789"
+      - "0.0.0.0:6789:6789" # reachable from whole network, change to "127.0.0.1:6789:6789" if you want to make n8n reachable only from localhost
     environment:
       N8N_PORT: "6789"
       N8N_PROTOCOL: https
