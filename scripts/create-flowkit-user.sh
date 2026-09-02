@@ -379,6 +379,8 @@ else
 
 fi
 
+sudo chown -R 1000:1000 workflows credentials
+
 
 # ---------------------------------------------------------------------------
 # 10. Final summary

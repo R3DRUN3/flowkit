@@ -29,6 +29,7 @@ Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-p
     - [Workflows](#workflows)
       - [Create your fist docker-based workflow](#create-your-fist-docker-based-workflow)
       - [Manage workflows](#manage-workflows)
+      - [Programmatically calling workflows](#programmatically-calling-workflows)
 
 
 ## Prerequisites  
@@ -128,7 +129,68 @@ Now run the workflow ad observe the output:
 ![w4](./media/ssh_workflow_4.png)  
 Congrats, you sucesfully runned your fist docker workflow! 💪  
 
-#### Manage workflows
+#### Manage workflows  
+
+One of the key advantages of using n8n via Flowkit is the ability to version workflows, enabling a **GitOps-based approach** to workflow development and deployment.  
+
+This allows multiple team members to develop and test workflows independently on their local n8n instances, then commit and version their changes in Git for the rest of the team.  
+Other members can subsequently synchronize those workflows from Git to their own test environments or deploy them to the production instance, providing a consistent and traceable workflow lifecycle.  
+
+
+To support this GitOps workflow, Flowkit provides two Bash scripts for exporting and importing n8n workflows.  
+
+`./scripts/export-workflows.sh` creates a version-controlled snapshot of the current n8n instance:  
+It exports each workflow as a separate, human-readable JSON file named after the workflow, making changes easy to review and track through Git.  The script also identifies the credentials referenced by the exported workflows and stores them in `credentials/credentials.json` using n8n's built-in encrypted credential format.
+
+`./scripts/import-workflows.sh` performs the reverse operation: It first restores the encrypted credentials and then imports the workflows from the `workflows/` directory.  
+Because the original credential IDs are preserved, the imported workflows automatically retain their references to the corresponding credentials.  
+
+This makes Git the synchronization layer between Flowkit instances: workflows can be developed locally, committed to the repository, reviewed and shared with the team, and then imported into test or production environments when required.  
+
+> [!WARNING]
+> The `N8N_ENCRYPTION_KEY` used to encrypt the credentials must be kept in `.env`, outside the Git repository and must be preserved across deployments.  
+> Without the original encryption key, encrypted credentials cannot be restored.  
+
+#### Programmatically calling workflows  
+
+n8n can also be used as a central automation engine that exposes an API through which workflows can be triggered programmatically.  
+A workflow can be made externally callable by adding a Webhook node, which exposes an HTTP endpoint that can be invoked by other applications, scripts, or automation systems.  
+
+This effectively turns n8n into a central orchestration layer:  
+external systems send a request to n8n, n8n executes the corresponding workflow, and the workflow can then orchestrate containers, tools, APIs, and other services.  
+
+
+As an example of this, let's make the SSH workflow created earlier (`demo-ssh-workflow`) callable through an HTTP request.  
+
+Open the workflow from n8n UI and add a **Webhook** node before the SSH node.  
+
+Configure the Webhook node like this:  
+![webhook](./media/webhook.png)  
+
+
+The workflow now exposes a webhook endpoint that can be called programmatically (remember to publish the workflow in order to test this).  
+
+When the workflow is active, n8n exposes the production webhook URL:
+
+```text
+https://flowkit.local:6789/webhook/docker-ssh-test
+```  
+
+For example, the workflow can now be triggered from the command line:
+
+```bash
+curl -k -X POST https://flowkit.local:6789/webhook/docker-ssh-test
+```  
+
+![run](./media/workflow_via_webhook.png)  
+
+
+> [!NOTE]
+> The `-k` option is required in this example because Flowkit uses a self-signed TLS certificate. If the certificate is trusted by the client, `-k` is not required.
+
+
+
+
 
 
 

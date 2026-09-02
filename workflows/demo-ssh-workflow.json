@@ -1,0 +1,145 @@
+{
+  "updatedAt": "2026-09-02T13:32:18.855Z",
+  "createdAt": "2026-09-02T12:31:18.546Z",
+  "id": "w5tbgy6AhRE14s7S",
+  "name": "demo-ssh-workflow",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -512,
+        -80
+      ],
+      "id": "56d2fcae-c44a-48ec-83f2-37613c0b2304",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "command": "docker run --rm curlimages/curl:8.22.0 -s https://httpbin.org/json"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -272,
+        0
+      ],
+      "id": "3d1cf0b8-ca09-4649-ace0-34a15dc8900e",
+      "name": "Execute a command",
+      "credentials": {
+        "sshPassword": {
+          "id": "dpyigsvtu3vELBhT",
+          "name": "SSH Password account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: JSON.parse($json.stdout)\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -48,
+        0
+      ],
+      "id": "fff62429-30d6-40a7-9795-c266f641a19e",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "docker-ssh-test",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -576,
+        112
+      ],
+      "id": "c475ae8d-a631-4a6d-9436-ad3fa840a0a0",
+      "name": "Webhook",
+      "webhookId": "81d6e708-3763-4ae5-9000-29128a898910"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Execute a command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a command": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Execute a command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "327b379b-625a-4a39-b395-c5df6c929f0f",
+  "activeVersionId": "631df20c-b5b6-4c46-acda-ee7d005ab957",
+  "versionCounter": 12,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-09-02T12:59:47.946Z",
+      "createdAt": "2026-09-02T12:59:47.946Z",
+      "role": "workflow:owner",
+      "workflowId": "w5tbgy6AhRE14s7S",
+      "projectId": "FjwT6aeBAKwfxTKC",
+      "project": {
+        "updatedAt": "2026-09-02T11:07:27.048Z",
+        "createdAt": "2026-09-02T10:54:00.216Z",
+        "id": "FjwT6aeBAKwfxTKC",
+        "name": "flowkit n8n <flowkit@automation.io>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "30075610-cf85-401f-85b9-90d3f0410c55"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
+}

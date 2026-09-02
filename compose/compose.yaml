@@ -57,6 +57,8 @@ services:
       - n8n_data:/home/node/.n8n
       - ../local-files:/files
       - ../certs:/certs:ro
+      - ../workflows:/backup/workflows
+      - ../credentials:/backup/credentials
 
 volumes:
   n8n_data:
