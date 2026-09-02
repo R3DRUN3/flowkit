@@ -11,6 +11,7 @@ Running n8n as a Docker container provides a portable and reproducible automatio
 SSH access to the host allows workflows to execute and orchestrate Dockerized tools without installing them inside n8n (custom docker image).  
 Versioning workflows allow for a GitOps approach.    
 This cleanly separates orchestration from tooling while keeping individual tools versioned, isolated, and replaceable.  
+The platform can then be extended as will, enabling the creation of virtually any type of workflow, including AI-driven agentic ones.      
 
 Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-portable-red-team-engine/) for a concrete use case.  
 
