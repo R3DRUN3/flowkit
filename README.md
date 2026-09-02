@@ -37,6 +37,12 @@ mkdir certs && cd certs && openssl req -x509 -nodes -days 825 \
   -addext "subjectAltName=DNS:flowkit.local,DNS:localhost,IP:<your-LAN-IP>"
 ```  
 
+> [!TIP]
+> **Why self-signed TLS?**  
+> Flowkit is structured to keep n8n private and off the public Internet, so a publicly trusted Let's Encrypt certificate isn't necessary.  
+> If remote access is needed, I prefer [Tailscale](https://tailscale.com/) and its HTTPS certificates instead of exposing n8n publicly.
+
+
 Now, from the repo root create the linux user `flowkit`, **this is the user that will run n8n SSH node on the host**:  
 ```bash
 sudo bash scripts/create-flowkit-user.sh
