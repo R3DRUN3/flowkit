@@ -1,0 +1,11 @@
+# env
+.env
+
+# secrets
+./scripts/secrets/flowkit
+
+## certs  
+certs
+
+## local files
+local-files
