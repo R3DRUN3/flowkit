@@ -4,7 +4,7 @@
 <img src="./media/logo.png" alt="logo" style="width:350px; height:310px;"/>
 
 
-Flowkit is a self-hosted environment for building and managing n8n automation workflows with Dockerized tools.  
+Flowkit is a self-hosted environment for building and managing n8n automation workflows, (also) with Dockerized tools.  
 
 It provides a portable and reproducible orchestration layer, with workflows versioned in Git for a GitOps-based development and deployment model.  
 Tools remain isolated, versioned, and independently replaceable, while the platform can be extended to virtually any automation use case, including AI-driven agentic workflows.      
