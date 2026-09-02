@@ -4,7 +4,7 @@
 #
 # FULL TEARDOWN of the Flowkit deployment. Brings the host back to
 # approximately pre-Flowkit state: removes containers, images, volumes
-# (n8n/Postgres/Traefik data - PERMANENT DATA LOSS), the 'flowkit' Linux
+# (n8n/Postgres/others - PERMANENT DATA LOSS), the 'flowkit' Linux
 # user, its SSH keys, the sshd hardening drop-in, and locally generated
 # secrets/backups.
 #
