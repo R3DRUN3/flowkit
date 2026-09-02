@@ -24,7 +24,7 @@ Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-p
       - [Configure env vars](#configure-env-vars)
       - [Deploy](#deploy)
     - [Workflows](#workflows)
-      - [Create your fist docker-based workflow](#create-your-fist-docker-based-workflow)
+      - [Create your first docker-based workflow](#create-your-first-docker-based-workflow)
       - [Manage workflows](#manage-workflows)
       - [Programmatically calling workflows](#programmatically-calling-workflows)
 
@@ -43,7 +43,7 @@ Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-p
 #### TLS cert generation  
 
 
-First of all, generate a self signed TLS cert for your n8n istance:  
+First of all, generate a self signed TLS cert for your n8n instance:  
 
 ```bash
 bash scripts/create-certs.sh
@@ -97,12 +97,12 @@ bash scripts/stop.sh
 bash scripts/deploy.sh
 ```  
 
-You should now be able to login with the user you previously created and you'll have a working n8n istance deployed  🥳  
+You should now be able to login with the user you previously created and you'll have a working n8n instance deployed  🥳  
 
 
 ### Workflows  
 
-#### Create your fist docker-based workflow  
+#### Create your first docker-based workflow  
 
 In this section, we will explore how to build an automation workflow based on an SSH node.  
 
@@ -140,7 +140,7 @@ return [
 
 Now run the workflow ad observe the output:  
 ![w4](./media/ssh_workflow_4.png)  
-Congrats, you sucesfully runned your fist docker workflow! 💪  
+Congrats, you succesfully ran your first docker workflow! 💪  
 
 #### Manage workflows  
 
