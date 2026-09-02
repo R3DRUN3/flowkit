@@ -20,7 +20,7 @@ Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-p
 - Docker
 - Docker Compose
 - sshd  
-
+- Python3
 
 ## Instructions  
 
@@ -78,7 +78,7 @@ SSH nodes can be particularly useful for executing commands directly on the host
 This enables workflows to perform tasks such as starting and managing Docker containers on the host, effectively turning n8n into an orchestration layer  
 capable of integrating and controlling virtually any tool, service, or command-line operation required by the workflow.  
 
-Create a simple workflow with a manual trigger and an SSH node:  
+Create a simple workflow with a manual trigger and an SSH node, call it `demo-ssh-workflow`:    
 ![w1](./media/ssh_workflow_1.png)  
 
 Click on the SSH node and configure it, set the following as the command:  
