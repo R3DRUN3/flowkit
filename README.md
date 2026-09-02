@@ -1,6 +1,9 @@
 # Flowkit
 
 
+<img src="./media/logo.png" alt="logo" style="width:300px;"/>
+
+
 Flowkit is a version-controlled toolkit for a self-hosted, local n8n automation stack, including Docker Compose, workflows, commands, and Bash scripts.  
 It provides a single, reproducible home for building and managing n8n automations.    
 
