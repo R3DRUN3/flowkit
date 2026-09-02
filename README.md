@@ -4,11 +4,12 @@
 <img src="./media/logo.png" alt="logo" style="width:350px; height:310px;"/>
 
 
-Flowkit is a toolkit for managing a self-hosted, local n8n automation stack.  
+Flowkit is an environment for managing a self-hosted n8n automation stack.  
 It provides a single, reproducible home for building and managing n8n automations.    
 
 Running n8n as a Docker container provides a portable and reproducible automation layer.  
 SSH access to the host allows workflows to execute and orchestrate Dockerized tools without installing them inside n8n (custom docker image).  
+Versioning workflows allow for a GitOps approach.    
 This cleanly separates orchestration from tooling while keeping individual tools versioned, isolated, and replaceable.  
 
 Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-portable-red-team-engine/) for a concrete use case.  
