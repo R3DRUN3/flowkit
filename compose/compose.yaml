@@ -24,33 +24,25 @@ services:
         condition: service_healthy
     ports:
       - "127.0.0.1:6789:6789"
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.n8n.rule=Host(`${SUBDOMAIN}.${DOMAIN_NAME}`)
-      - traefik.http.routers.n8n.tls=true
-      - traefik.http.routers.n8n.entrypoints=web,websecure
-      - traefik.http.routers.n8n.tls.certresolver=mytlschallenge
-      - traefik.http.middlewares.n8n.headers.SSLRedirect=true
-      - traefik.http.middlewares.n8n.headers.STSSeconds=315360000
-      - traefik.http.middlewares.n8n.headers.forceSTSHeader=true
-      - traefik.http.routers.n8n.middlewares=n8n@docker
     environment:
       N8N_PORT: "6789"
       N8N_PROTOCOL: https
       N8N_SSL_CERT: /certs/flowkit.crt
       N8N_SSL_KEY: /certs/flowkit.key
-      N8N_HOST: flowkit.local  # or your LAN IP/hostname, no public domain needed
+      N8N_HOST: flowkit.local # or your LAN IP/hostname, no public domain needed
       WEBHOOK_URL: https://flowkit.local:6789/
       N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
       NODE_ENV: production
       GENERIC_TIMEZONE: ${GENERIC_TIMEZONE}
       TZ: ${GENERIC_TIMEZONE}
+
       DB_TYPE: postgresdb
       DB_POSTGRESDB_HOST: postgres
       DB_POSTGRESDB_PORT: "5432"
       DB_POSTGRESDB_DATABASE: ${POSTGRES_DB}
       DB_POSTGRESDB_USER: ${POSTGRES_USER}
       DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD}
+
       N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
       N8N_RESTRICT_FILE_ACCESS_TO: /files
     volumes:
