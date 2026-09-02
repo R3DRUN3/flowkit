@@ -68,6 +68,9 @@ From the repo root create the linux user `flowkit`, **this is the user that will
 sudo bash scripts/create-flowkit-user.sh
 ```  
 
+> [!TIP]
+> Keep track of the SSH password, you will need it in order to configure n8n credential for SSH node execution.  
+
 #### Configure env vars  
 
 Create the `.env` file by copying the content of `.env.example` and modify the env vars with your desired values.  
@@ -78,12 +81,23 @@ Now you are ready for the deploy, run:
 ```bash
 bash scripts/deploy.sh
 ```  
-If this is the first deployment it will also pull all the required docker images.  
+
+> [!TIP]
+> If this is the first deployment it will take some times as it will also pull all the required docker images.   
+> Subsequent deployments will be much faster.  
+
+
+
+  
 Once the deployment has completed and n8n is ready, open your browser at `https://localhost:6789` and configure n8n user for UI authentication, for example:  
 
 ![ui-user](./media/ui_user_registration.png)  
 
-Keep track of email and password as you will need them later to login again.  
+
+> [!TIP]
+> Keep track of email and password as you will need them later to login again.  
+
+
 Now try to stop the deployment and restart it:  
 ```bash
 bash scripts/stop.sh
@@ -99,7 +113,7 @@ You should now be able to login with the user you previously created and you'll 
 
 In this section, we will explore how to build an automation workflow based on an SSH node.  
 
-SSH nodes can be particularly useful for executing commands directly on the host system.  
+[SSH nodes](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.ssh) can be particularly useful for executing commands directly on the host system.  
 This enables workflows to perform tasks such as starting and managing Docker containers on the host, effectively turning n8n into an orchestration layer  
 capable of integrating and controlling virtually any tool, service, or command-line operation required by the workflow.  
 
@@ -111,6 +125,12 @@ Click on the SSH node and configure it, set the following as the command:
 docker run --rm curlimages/curl:8.22.0 -s https://httpbin.org/json
 ```  
 ![w2](./media/ssh_workflow_2.png)  
+
+> [!TIP]
+> By specifying the Docker image tag, we ensure reproducibility across different machines.
+> We apply this practice to both the main containers in the architecture (e.g., n8n) and the tools defined in the workflows.
+  
+
 
 
 Now click on `Connect to SSH Password` and configure authentication with the `flowkit` ssh user you created at the beginning of the deployment:  
