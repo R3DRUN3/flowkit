@@ -1,7 +1,7 @@
 # Flowkit
 
 
-<img src="./media/logo.png" alt="logo" style="width:300px;"/>
+<img src="./media/logo.png" alt="logo" style="width:350px; height:310px;"/>
 
 
 Flowkit is a toolkit for managing a self-hosted, local n8n automation stack.  
