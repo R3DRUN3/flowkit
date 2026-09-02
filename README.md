@@ -5,7 +5,7 @@
 
 
 Flowkit is an environment for managing a self-hosted n8n automation stack.  
-It provides a single, reproducible home for building and managing n8n automations.    
+It provides a single, reproducible home for building and managing n8n orchestrations that can also leverage docker containers.    
 
 Running n8n as a Docker container provides a portable and reproducible automation layer.  
 SSH access to the host allows workflows to execute and orchestrate Dockerized tools without installing them inside n8n (custom docker image).  
@@ -14,6 +14,21 @@ This cleanly separates orchestration from tooling while keeping individual tools
 
 Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-portable-red-team-engine/) for a concrete use case.  
 
+
+## Table of Contents
+
+- [Flowkit](#flowkit)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Instructions](#instructions)
+    - [First deployment](#first-deployment)
+      - [TLS cert generation](#tls-cert-generation)
+      - [Create SSH-enabled user](#create-ssh-enabled-user)
+      - [Configure env vars](#configure-env-vars)
+      - [Deploy](#deploy)
+    - [Workflows](#workflows)
+      - [Create your fist docker-based workflow](#create-your-fist-docker-based-workflow)
+      - [Manage workflows](#manage-workflows)
 
 
 ## Prerequisites  
@@ -25,7 +40,9 @@ Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-p
 
 ## Instructions  
 
-### First deployment (from scratch):  
+### First deployment  
+
+#### TLS cert generation  
 
 
 First of all, generate a self signed TLS cert for your n8n istance:  
@@ -43,14 +60,18 @@ mkdir certs && cd certs && openssl req -x509 -nodes -days 825 \
 > Flowkit is structured to keep n8n private and off the public Internet, so a publicly trusted Let's Encrypt certificate isn't necessary.  
 > If remote access is needed, I prefer [Tailscale](https://tailscale.com/) and its HTTPS certificates instead of exposing n8n publicly.
 
+#### Create SSH-enabled user  
 
-Now, from the repo root create the linux user `flowkit`, **this is the user that will run n8n SSH node on the host**:  
+From the repo root create the linux user `flowkit`, **this is the user that will run n8n SSH node on the host**:  
 ```bash
 sudo bash scripts/create-flowkit-user.sh
 ```  
 
+#### Configure env vars  
 
-Now create the `.env` file by copying the content of `.env.example` and modify the env vars with your desired values.  
+Create the `.env` file by copying the content of `.env.example` and modify the env vars with your desired values.  
+
+#### Deploy  
 
 Now you are ready for the deploy, run:  
 ```bash
@@ -72,6 +93,8 @@ You should now be able to login with the user you previously created and you'll 
 
 
 ### Workflows  
+
+#### Create your fist docker-based workflow  
 
 In this section, we will explore how to build an automation workflow based on an SSH node.  
 
@@ -103,7 +126,9 @@ return [
 
 Now run the workflow ad observe the output:  
 ![w4](./media/ssh_workflow_4.png)  
-Congrats, you sucesfully runned your fist docker workflow! 💪
+Congrats, you sucesfully runned your fist docker workflow! 💪  
+
+#### Manage workflows
 
 
 
