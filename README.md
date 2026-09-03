@@ -21,6 +21,7 @@ Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-p
 - [Flowkit](#flowkit)
   - [Table of Contents](#table-of-contents)
   - [Prerequisites](#prerequisites)
+  - [Architecture](#architecture)
   - [Instructions](#instructions)
     - [Make this repository your deployment baseline](#make-this-repository-your-deployment-baseline)
     - [First deployment](#first-deployment)
@@ -40,6 +41,41 @@ Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-p
 - Docker Compose
 - sshd  
 - Python3
+
+
+
+## Architecture 
+n8n acts as the control plane, defining and orchestrating workflows without requiring their dependencies on the n8n host.  
+Workloads that need specific tooling are executed through Flowkit via SSH and Docker, while standard workflows run directly in the n8n process without SSH.  
+This keeps dependencies isolated and reproducible while keeping the n8n host clean:       
+
+```console
+                         ┌─────────────────────────┐
+External scripts ──────► │                         │
+CLI tools ─────────────► │          n8n            │
+Applications ──────────► │   Workflow Engine/API   │
+Services ──────────────► │          │              │
+Integrations ──────────► │          ├──► Normal    │
+                         │          │    workflows │
+                         └──────────┼──────────────┘
+                                    │
+                                   SSH
+                                    │
+                                    ▼
+                              ┌───────────┐
+                              │  Flowkit  │
+                              │   host    │
+                              └─────┬─────┘
+                                    │
+                                  Docker
+                                    │
+                            ┌───────┼───────┐
+                            ▼       ▼       ▼
+                          Tool A  Tool B  Tool C
+```
+
+
+
 
 ## Instructions  
 
