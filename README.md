@@ -46,7 +46,7 @@ Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-p
 
 ## Architecture 
 n8n acts as the control plane, defining and orchestrating workflows without requiring their dependencies on the n8n host.  
-Workloads that need specific tooling are executed through Flowkit via SSH and Docker, while standard workflows run directly in the n8n process without SSH.  
+Workloads that need specific tooling are executed on the host via SSH and Docker, while standard workflows run directly inside the n8n docker container.  
 This keeps dependencies isolated and reproducible while keeping the n8n host clean:       
 
 ```console
