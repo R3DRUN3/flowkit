@@ -48,7 +48,7 @@ Clone or fork this repository, It will serve as the baseline for managing your n
 For enterprise projects, I recommend copying the repository to your organization’s official internal version-control system and keeping it private.  
 For personal projects, the choice is up to the individual.  
 In general, I recommend keeping the repository private; however, it can also be made public if you want to share workflows with others.  
-No secrets are committed to git: workflow credentials are encrypted using the `N8N_ENCRYPTION_KEY` environment variable, which is stored in the `.env` file (excluded from version control).  
+No plain-text secrets are committed to git: workflow credentials are encrypted using the `N8N_ENCRYPTION_KEY` environment variable, which is stored in the `.env` file (excluded from version control).  
 
 
 ### First deployment  
