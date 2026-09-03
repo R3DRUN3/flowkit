@@ -11,7 +11,7 @@
 Flowkit is a self-hosted environment for building and managing n8n automation workflows, (also) with Dockerized tools.  
 
 It provides a portable and reproducible orchestration layer, with workflows versioned in Git for a GitOps-based development and deployment model.  
-Tools remain isolated, versioned, and independently replaceable, while the platform can be extended to virtually any automation use case, including AI-driven agentic workflows.      
+Tools remain isolated, versioned, and independently replaceable, while the platform can be extended to virtually any automation use case, including [AI-driven agentic workflows](https://docs.n8n.io/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.agent).        
 
 Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-portable-red-team-engine/) for a concrete use case.  
 
