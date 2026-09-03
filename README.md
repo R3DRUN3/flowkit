@@ -214,7 +214,8 @@ curl -k -X POST https://flowkit.local:6789/webhook/docker-ssh-test
 > [!NOTE]
 > The `-k` option is required in this example because Flowkit uses a self-signed TLS certificate. If the certificate is trusted by the client, `-k` is not required.
 
-
+> [!TIP]
+> For production deployment is reccommended to add [webhook authenticaton](https://docs.n8n.io/integrations/builtin/credentials/webhook).
 
 
 
