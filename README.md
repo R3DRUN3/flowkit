@@ -22,6 +22,7 @@ Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-p
   - [Table of Contents](#table-of-contents)
   - [Prerequisites](#prerequisites)
   - [Instructions](#instructions)
+    - [Make this repository your deployment baseline](#make-this-repository-your-deployment-baseline)
     - [First deployment](#first-deployment)
       - [TLS cert generation](#tls-cert-generation)
       - [Create SSH-enabled user](#create-ssh-enabled-user)
@@ -41,6 +42,14 @@ Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-p
 - Python3
 
 ## Instructions  
+
+### Make this repository your deployment baseline  
+Clone or fork this repository, It will serve as the baseline for managing your n8n instance.  
+For enterprise projects, we recommend copying the repository to your organization’s official internal version-control system and keeping it private.  
+For personal projects, the choice is up to the individual.  
+In general, we recommend keeping the repository private; however, it can also be made public if you want to share workflows with others.  
+No secrets are committed to git: workflow credentials are encrypted using the `N8N_ENCRYPTION_KEY` environment variable, which is stored in the `.env` file (excluded from version control).  
+
 
 ### First deployment  
 
