@@ -45,9 +45,9 @@ Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-p
 
 ### Make this repository your deployment baseline  
 Clone or fork this repository, It will serve as the baseline for managing your n8n instance.  
-For enterprise projects, we recommend copying the repository to your organization’s official internal version-control system and keeping it private.  
+For enterprise projects, I recommend copying the repository to your organization’s official internal version-control system and keeping it private.  
 For personal projects, the choice is up to the individual.  
-In general, we recommend keeping the repository private; however, it can also be made public if you want to share workflows with others.  
+In general, I recommend keeping the repository private; however, it can also be made public if you want to share workflows with others.  
 No secrets are committed to git: workflow credentials are encrypted using the `N8N_ENCRYPTION_KEY` environment variable, which is stored in the `.env` file (excluded from version control).  
 
 
@@ -69,7 +69,7 @@ bash scripts/create-certs.sh
 
 #### Create SSH-enabled user  
 
-From the repo root create the linux user `flowkit`, **this is the user that will run n8n SSH node on the host**:  
+From the repo root create the linux user `flowkit`, **this is the user that will run n8n SSH nodes on the host**:  
 ```bash
 sudo bash scripts/create-flowkit-user.sh
 ```  
