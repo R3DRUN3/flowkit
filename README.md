@@ -232,8 +232,6 @@ The resulting architecture is:
 ![ai-arch](./media/ai_use_case_arch.png)  
 
 
-Although this is a very simple example, it introduces a fundamental concept of agentic workflows in n8n:  
-the AI agent does not perform the underlying operation directly, instead, it is given access to a specialized workflow that acts as a tool, allowing the agent to retrieve the information it needs to formulate an appropriate response.  
 
 Create the `phone-check` workflow with these nodes:  
 ![phone-check1](./media/pc1.png)  
