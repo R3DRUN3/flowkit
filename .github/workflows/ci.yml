@@ -1,8 +1,10 @@
 name: ci
 
+#on:
+#   schedule:
+#     - cron: "0 6 * * *"   # daily at 06:00 UTC
 on:
-  schedule:
-    - cron: "*/3 * * * *"   #- cron: "0 6 * * *"   # daily at 06:00 UTC
+  push:
   workflow_dispatch: {}
 
 permissions:
