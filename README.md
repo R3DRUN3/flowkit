@@ -99,9 +99,15 @@ Integrations ──────────► │          ├──► Normal 
 
 ### Make this repository your deployment baseline  
 Clone or fork this repository, It will serve as the baseline for managing your n8n instance.  
+Once you have cloned this base, you can extend it as needed by adding scripts, automations, workflows, tools, and anything else suited to your specific context.  
+
+> [!NOTE]
+> This repository includes a GitHub Action that opens a pull request to update the Docker Compose file to the latest stable release of n8n.  
+> If you are using a version control system other than GitHub, you will need to adapt it accordingly.  
+
 For enterprise projects, I recommend copying the repository to your organization’s official internal version-control system and keeping it private.  
 For personal projects, the choice is up to the individual.  
-In general, I recommend keeping the repository private; however, it can also be made public if you want to share workflows with others.  
+ 
 No plain-text secrets are committed to git: workflow credentials are encrypted using the `N8N_ENCRYPTION_KEY` environment variable, which is stored in the `.env` file (excluded from version control).  
 
 
