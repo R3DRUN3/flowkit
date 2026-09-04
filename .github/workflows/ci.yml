@@ -1,8 +1,5 @@
-name: ci
+name: Check n8n stable release
 
-#on:
-#   schedule:
-#     - cron: "0 6 * * *"   # daily at 06:00 UTC
 on:
   push:
   workflow_dispatch: {}
@@ -33,6 +30,10 @@ jobs:
         id: current
         run: |
           CURRENT=$(grep -oE 'n8nio/n8n:+\.+\.+' compose/compose.yaml | head -1 | cut -d: -f2)
+          if [ -z "$CURRENT" ]; then
+            echo "Failed to extract current pinned n8n version from compose/compose.yaml" >&2
+            exit 1
+          fi
           echo "Current pinned n8n version: $CURRENT"
           echo "version=$CURRENT" >> "$GITHUB_OUTPUT"
 
@@ -62,3 +63,4 @@ jobs:
           labels: |
             dependencies
             automated-pr
+
