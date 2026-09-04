@@ -29,7 +29,13 @@ jobs:
       - name: Get current pinned version
         id: current
         run: |
-          CURRENT=$(grep -oE 'n8nio/n8n:+\.+\.+' compose/compose.yaml | head -1 | cut -d: -f2)
+          LINE=$(grep -m1 'n8nio/n8n:' compose/compose.yaml)
+          if [ -z "$LINE" ]; then
+            echo "Could not find an n8nio/n8n image line in compose/compose.yaml" >&2
+            exit 1
+          fi
+          AFTER_COLON=$(echo "$LINE" | awk -F 'n8nio/n8n:' '{print $2}')
+          CURRENT=$(echo "$AFTER_COLON" | awk '{print $1}')
           if [ -z "$CURRENT" ]; then
             echo "Failed to extract current pinned n8n version from compose/compose.yaml" >&2
             exit 1
@@ -55,9 +61,9 @@ jobs:
           branch: bump-n8n-${{ steps.latest.outputs.version }}
           title: "chore: bump n8n to ${{ steps.latest.outputs.version }}"
           body: |
-            Automated bump of `n8nio/n8n` to the latest **stable** release **${{ steps.latest.outputs.version }}**, resolved via the npm `latest` dist-tag.
+            Automated bump of `n8nio/n8n` to the latest stable release ${{ steps.latest.outputs.version }}, resolved via the npm latest dist-tag.
 
-            n8n only points the npm `latest` dist-tag at stable, production-ready releases. Betas/RCs are published under other npm dist-tags (e.g. `next`), so they are never picked up by this workflow.
+            n8n only points the npm latest dist-tag at stable, production-ready releases. Betas and RCs are published under other npm dist-tags, so they are never picked up by this workflow.
 
             Please review and test before merging.
           labels: |
