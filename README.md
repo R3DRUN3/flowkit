@@ -28,6 +28,7 @@ Tools remain isolated, versioned, and independently replaceable, while the platf
       - [TLS cert generation](#tls-cert-generation)
       - [Create SSH-enabled user](#create-ssh-enabled-user)
       - [Configure env vars](#configure-env-vars)
+      - [Download docker tool images (optional)](#download-docker-tool-images-optional)
       - [Deploy](#deploy)
     - [Workflows](#workflows)
       - [Create your first docker-based workflow](#create-your-first-docker-based-workflow)
@@ -140,6 +141,13 @@ sudo bash scripts/create-flowkit-user.sh
 #### Configure env vars  
 
 Create the `.env` file by copying the content of `.env.example` and modify the env vars with your desired values.  
+
+#### Download docker tool images (optional)  
+
+If you want to pre-seed the Flowkit host with every tool image referenced by the versioned workflows, run:  
+```bash
+bash ./scripts/get-docker-tools.sh
+```
 
 #### Deploy  
 
