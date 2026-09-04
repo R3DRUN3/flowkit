@@ -11,15 +11,15 @@
 Flowkit is a self-hosted environment for building and managing n8n automation workflows, (also) with Dockerized tools.  
 
 It provides a portable and reproducible orchestration layer, with workflows versioned in Git for a GitOps-based development and deployment model.  
-Tools remain isolated, versioned, and independently replaceable, while the platform can be extended to virtually any automation use case, including [AI-driven agentic workflows](https://docs.n8n.io/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.agent).        
+Tools remain isolated, versioned, and independently replaceable, while the platform can be extended to virtually any automation use case, including [AI-driven agentic workflows](https://docs.n8n.io/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.agent).   
 
-Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-portable-red-team-engine/) for a concrete use case.  
 
 
 ## Table of Contents
 
 - [Flowkit](#flowkit)
   - [Table of Contents](#table-of-contents)
+  - [Use cases](#use-cases)
   - [Prerequisites](#prerequisites)
   - [Architecture](#architecture)
   - [Instructions](#instructions)
@@ -31,8 +31,25 @@ Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-p
       - [Deploy](#deploy)
     - [Workflows](#workflows)
       - [Create your first docker-based workflow](#create-your-first-docker-based-workflow)
+      - [Bonus: create your first AI workflow](#bonus-create-your-first-ai-workflow)
       - [Manage workflows](#manage-workflows)
       - [Programmatically calling workflows](#programmatically-calling-workflows)
+
+
+## Use cases  
+Some use cases for Flowkit are:  
+- Managing a home lab  
+- Operating a central automation platform  
+- Orchestrating Dockerized tools and services in a simple way
+- Building reusable internal workflows  
+- Managing infrastructure operations  
+- Automating security and IT tasks  
+- Connecting APIs, applications, and command-line tools  
+- Running AI-assisted operational workflows  
+- Versioning workflows with Git  
+- Deploying automation consistently across environments  
+
+Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-portable-red-team-engine/) for a real world case study.  
 
 
 ## Prerequisites  
@@ -45,8 +62,8 @@ Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-p
 
 
 ## Architecture 
-n8n acts as the control plane, defining and orchestrating workflows without requiring their dependencies on the n8n host.  
-Workloads that need specific tooling are executed on the host via SSH and Docker, while standard workflows run directly inside the n8n docker container.  
+The n8n container acts as the control plane, defining and orchestrating workflows without requiring their dependencies (custom n8n image).    
+Workloads that need specific tooling are executed on the host via SSH and Docker, while standard workflows run directly inside the n8n docker container.   
 This keeps dependencies isolated and reproducible while keeping the n8n host clean:       
 
 ```console
@@ -146,7 +163,7 @@ bash scripts/stop.sh
 bash scripts/deploy.sh
 ```  
 
-You should now be able to login with the user you previously created and you'll have a working n8n instance deployed  🥳  
+You should now be able to login with the user you previously created and you'll have a working n8n instance deployed.  
 
 
 ### Workflows  
@@ -189,7 +206,83 @@ return [
 
 Now run the workflow ad observe the output:  
 ![w4](./media/ssh_workflow_4.png)  
-Congrats, you succesfully ran your first docker workflow! 💪  
+Congrats, you succesfully ran your first docker workflow !! 
+
+#### Bonus: create your first AI workflow  
+One of n8n's key strengths is its ability to integrate a wide range of third-party services through a large library of ready-to-use nodes.  
+Among these integrations are several AI providers (n8n also supports the integration of self-hosted models).  
+This makes it possible to design workflows that incorporate AI-powered capabilities as well as agentic behaviors, where an AI model can interact with external tools and services or other n8n workflows to accomplish a specific task.  
+
+In this section, we will see how to introduce an AI component into a workflow through a deliberately simple use case:  
+
+Our scenario assumes that Tailscale is running both on the Flowkit host and on our own smartphone.  
+Tailscale allows the two devices to communicate directly over a private network, even when they are connected to different local networks:  
+Your Flowkit host might be in a VPC in Australia and your smartphone might be connected to your home wifi in Italy.  
+
+The goal is to create a workflow that allows us to ask an AI, through a chat interface, whether our smartphone is currently reachable.  
+
+To implement this scenario, we split the functionality into two separate workflows:  
+
+* **phone-check**: performs a connectivity check by sending an ICMP ping to the smartphone's Tailscale IP address and returns the result.  
+* **ai-phone-checker**: provides the conversational AI interface and has access to the `phone-check` workflow as a tool, this allows the AI agent to invoke the connectivity check whenever required.  
+
+The resulting architecture is:
+
+![ai-arch](./media/ai_use_case_arch.png)  
+
+
+Although this is a very simple example, it introduces a fundamental concept of agentic workflows in n8n:  
+the AI agent does not perform the underlying operation directly, instead, it is given access to a specialized workflow that acts as a tool, allowing the agent to retrieve the information it needs to formulate an appropriate response.  
+
+Create the `phone-check` workflow with these nodes:  
+![phone-check1](./media/pc1.png)  
+
+Configure the SSH command `ping phone` node to ping your smartphone's tailnet IP:  
+![phone-ping](./media/pc2.png)   
+
+>[!NOTE]
+> In this case we dont need docker as we can directly call `ping` on the Flowkit host.    
+
+Put this javascript code in the `ping output` node:  
+```javascript
+const result = $input.first().json;
+
+const reachable = result.code === 0;
+
+let latency_ms = null;
+
+if (reachable) {
+  const match = result.stdout.match(/time[=<]([\d.]+)\s*ms/);
+  if (match) {
+    latency_ms = Number(match[1]);
+  }
+}
+
+return [
+  {
+    json: {
+      reachable,
+      latency_ms,
+      exit_code: result.code,
+      error: result.stderr || null,
+    },
+  },
+];
+```  
+
+Test and publish this workflow.  
+Now let's create the `ai-phone-checker` workflow like this:  
+![ai1](./media/ai1.png)  
+In this example I use an [Azure Foundry](https://ai.azure.com/home) deployment but you can use other providers or self-hosted models.  
+Configure required connection and api keys for your AI provider and add the `phone-check` workflow we created previously as the agent tool.  
+
+Now start chatting with the AI, notice how it will call the `phone-check` workflow only when you ask it about your phone:  
+![ai2](./media/ai2.png)  
+
+
+
+
+
 
 #### Manage workflows  
 
@@ -252,11 +345,3 @@ curl -k -X POST https://flowkit.local:6789/webhook/docker-ssh-test
 
 > [!TIP]
 > For production deployment is reccommended to add [webhook authenticaton](https://docs.n8n.io/integrations/builtin/credentials/webhook).
-
-
-
-
-
-
-
-
