@@ -1,0 +1,62 @@
+name: ci
+
+on:
+  schedule:
+    - cron: "*/3 * * * *"   #- cron: "0 6 * * *"   # daily at 06:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Get latest STABLE n8n version (npm dist-tag)
+        id: latest
+        run: |
+          VERSION=$(curl -s https://registry.npmjs.org/-/package/n8n/dist-tags | jq -r '.latest')
+          if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
+            echo "Failed to resolve latest stable version" >&2
+            exit 1
+          fi
+          echo "Resolved latest stable n8n version: $VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Get current pinned version
+        id: current
+        run: |
+          CURRENT=$(grep -oE 'n8nio/n8n:+\.+\.+' compose/compose.yaml | head -1 | cut -d: -f2)
+          echo "Current pinned n8n version: $CURRENT"
+          echo "version=$CURRENT" >> "$GITHUB_OUTPUT"
+
+      - name: Compare and update
+        id: diff
+        run: |
+          if [ "${{ steps.latest.outputs.version }}" != "${{ steps.current.outputs.version }}" ]; then
+            sed -i "s#n8nio/n8n:${{ steps.current.outputs.version }}#n8nio/n8n:${{ steps.latest.outputs.version }}#" compose/compose.yaml
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create Pull Request
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore: bump n8n to ${{ steps.latest.outputs.version }}"
+          branch: bump-n8n-${{ steps.latest.outputs.version }}
+          title: "chore: bump n8n to ${{ steps.latest.outputs.version }}"
+          body: |
+            Automated bump of `n8nio/n8n` to the latest **stable** release **${{ steps.latest.outputs.version }}**, resolved via the npm `latest` dist-tag.
+
+            n8n only points the npm `latest` dist-tag at stable, production-ready releases. Betas/RCs are published under other npm dist-tags (e.g. `next`), so they are never picked up by this workflow.
+
+            Please review and test before merging.
+          labels: |
+            dependencies
+            automated-pr
