@@ -24,6 +24,18 @@
 #   - sshd configuration is scoped to this user only via a Match User block
 #   - the global sshd configuration is not modified
 #
+# Host addressing:
+#   - By default this script no longer prints/recommends the host's LAN IP.
+#   - Instead it defaults to "host.docker.internal", which is the portable
+#     hostname n8n (running inside the Docker container) should use to reach
+#     this host over SSH. This makes the resulting n8n SSH credential work
+#     on ANY host, regardless of its actual IP address.
+#   - On native Linux, "host.docker.internal" only resolves correctly if the
+#     n8n container is started with:
+#       extra_hosts:
+#         - "host.docker.internal:host-gateway"
+#     (this must be set in compose/compose.yaml on the n8n service).
+#
 # Usage:
 #   sudo ./create-flowkit-user.sh [--ssh-host <hostname-or-ip>] [--ssh-port <port>]
 #
@@ -50,6 +62,10 @@ FLOWKIT_HOME="/home/${FLOWKIT_USER}"
 
 SSHD_DROPIN="/etc/ssh/sshd_config.d/99-flowkit.conf"
 
+# Default host value used for the printed n8n SSH credential instructions
+# and for the sshd -T effective-config check. This has no effect on actual
+# authentication (Match User is scoped by username, not by client address).
+DEFAULT_SSH_HOST="host.docker.internal"
 
 SSH_HOST=""
 SSH_PORT="22"
@@ -102,12 +118,28 @@ fi
 # ---------------------------------------------------------------------------
 # Determine SSH host
 # ---------------------------------------------------------------------------
+#
+# Unlike earlier versions of this script, we do NOT default to the host's
+# detected LAN IP anymore. That made the resulting n8n SSH credential
+# host-specific and broke every time the stack was deployed on a different
+# machine/network.
+#
+# Instead we default to "host.docker.internal", which Docker resolves (from
+# inside the n8n container) to whatever host it is currently running on,
+# as long as the n8n service in compose/compose.yaml has:
+#
+#   extra_hosts:
+#     - "host.docker.internal:host-gateway"
+#
+# You can still override this with --ssh-host if you need to test against
+# a concrete IP/hostname.
+# ---------------------------------------------------------------------------
 
 if [[ -z "$SSH_HOST" ]]; then
-  SSH_HOST="$(hostname -I 2>/dev/null | awk '{print $1}')"
-  SSH_HOST="${SSH_HOST:-127.0.0.1}"
+  SSH_HOST="$DEFAULT_SSH_HOST"
 
-  echo "No --ssh-host given, defaulting to detected host address: ${SSH_HOST}"
+  echo "No --ssh-host given, defaulting to: ${SSH_HOST}"
+  echo "(Make sure the n8n service has 'extra_hosts: [\"host.docker.internal:host-gateway\"]' in compose/compose.yaml)"
 fi
 
 # ---------------------------------------------------------------------------
@@ -362,6 +394,11 @@ fi
 # ---------------------------------------------------------------------------
 #
 # We use sshd -T -C so that the Match User block is actually evaluated.
+#
+# Note: "addr=127.0.0.1" below is only a placeholder value required by
+# sshd -T -C syntax to evaluate Match blocks; it does not reflect (and does
+# not need to reflect) the real client address that will connect from the
+# n8n container via host.docker.internal.
 # ---------------------------------------------------------------------------
 
 echo
@@ -379,11 +416,26 @@ else
 
 fi
 
-sudo chown -R 1000:1000 workflows credentials
+# ---------------------------------------------------------------------------
+# 10. Fix ownership of workflow/credential backup directories (if present)
+# ---------------------------------------------------------------------------
+#
+# These directories are bind-mounted into the n8n container, which runs as
+# uid/gid 1000 (the "node" user in the n8n image). Run this from the repo
+# root so the relative paths resolve correctly.
+# ---------------------------------------------------------------------------
 
+for d in workflows credentials; do
+  if [[ -d "$d" ]]; then
+    chown -R 1000:1000 "$d"
+    echo "Set ownership of ./${d} to 1000:1000."
+  else
+    echo "Directory ./${d} not found, skipping ownership fix (run from repo root if this is unexpected)."
+  fi
+done
 
 # ---------------------------------------------------------------------------
-# 10. Final summary
+# 11. Final summary
 # ---------------------------------------------------------------------------
 
 echo
@@ -415,7 +467,7 @@ echo
 echo "GNOME/GDM desktop account:"
 echo "  hidden as a system account"
 echo
-echo "SSH host:"
+echo "SSH host (for the n8n credential):"
 echo "  ${SSH_HOST}:${SSH_PORT}"
 echo
 echo "sshd configuration:"
@@ -432,5 +484,10 @@ echo "  Port:           ${SSH_PORT}"
 echo "  Username:       ${FLOWKIT_USER}"
 echo "  Password:       <the password you configured>"
 echo
+echo "NOTE: For '${SSH_HOST}' to resolve from inside the n8n container on"
+echo "native Linux, the n8n service in compose/compose.yaml must include:"
+echo
+echo "  extra_hosts:"
+echo "    - \"host.docker.internal:host-gateway\""
+echo
 echo "============================================================"
-

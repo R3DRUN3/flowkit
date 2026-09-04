@@ -207,7 +207,8 @@ docker run --rm curlimages/curl:8.22.0 -s https://httpbin.org/json
 
 
 
-Now click on `Connect to SSH Password` and configure authentication with the `flowkit` ssh user you created at the beginning of the deployment:  
+Now click on `Connect to SSH Password` and configure authentication with the `flowkit` ssh user you created at the beginning of the deployment.  
+**Always put `host.docker.internal` as the host and 22 as the port**:     
 ![w3](./media/ssh_workflow_3.png)  
 
 Add a code node to your workflow with this javascript inside:  
