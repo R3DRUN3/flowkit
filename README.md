@@ -62,7 +62,8 @@ Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-p
 
 
 ## Architecture 
-The n8n container acts as the control plane, defining and orchestrating workflows without requiring their dependencies (custom n8n image).    
+The n8n container acts as the control plane, defining and orchestrating workflows without requiring their dependencies:  
+no need to create/update a custom n8n image.      
 Workloads that need specific tooling are executed on the host via SSH and Docker, while standard workflows run directly inside the n8n docker container.   
 This keeps dependencies isolated and reproducible while keeping the n8n host clean:       
 
