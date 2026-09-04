@@ -1,4 +1,4 @@
-name: Check n8n stable release
+name: ci
 
 on:
   push:
