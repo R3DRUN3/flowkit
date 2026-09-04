@@ -17,7 +17,7 @@ services:
       retries: 10
 
   n8n:
-    image: n8nio/n8n:2.36.9 # keep the version up to date, use only stable releases
+    image: n8nio/n8n:2.37.10 # keep the version up to date, use only stable releases
     restart: always
     depends_on:
       postgres:
