@@ -1,7 +1,9 @@
 name: ci
 
 on:
-  push:
+  #push #uncomment to test on the fly
+  schedule:
+    - cron: "0 6 1 * *"   # once a month, on the 1st at 06:00 UTC
   workflow_dispatch: {}
 
 permissions:
