@@ -263,7 +263,7 @@ PASSWORD_STATUS="$(passwd -S "$FLOWKIT_USER" 2>/dev/null | awk '{print $2}')"
 if [[ "$USER_IS_NEW" -eq 1 ]]; then
 
   echo
-  echo "Set the SSH password for ${FLOWKIT_USER}."
+  echo "Set the SSH password for ${FLOWKIT_USER}, generate a secure password!!."
   echo "This password is NOT stored by this script."
   echo
 
@@ -366,6 +366,7 @@ else
 
 fi
 
+
 # ---------------------------------------------------------------------------
 # 8. Reload SSH daemon
 # ---------------------------------------------------------------------------
@@ -384,10 +385,20 @@ elif service ssh reload 2>/dev/null; then
 
 else
 
-  echo "ERROR: Could not reload SSH service." >&2
-  exit 1
+  echo "Could not reload SSH service, trying to start the service" >&2
+
+  if systemctl start sshd 2>/dev/null; then
+    echo "sshd started successfully"
+  else
+    echo "ERROR: Could not start sshd"
+    exit 1
+  fi
 
 fi
+
+
+
+
 
 # ---------------------------------------------------------------------------
 # 9. Verify the effective sshd configuration for flowkit

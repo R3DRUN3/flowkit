@@ -57,7 +57,7 @@ Read [this article](https://www.neteye-blog.com/blog/2026/01/27/architecting-a-p
 - Linux host (tested on arch-linux and debian-based distros)  
 - Docker
 - Docker Compose
-- sshd  
+- sshd (listening on port 22)
 - Python3
 
 
@@ -210,6 +210,10 @@ docker run --rm curlimages/curl:8.22.0 -s https://httpbin.org/json
 Now click on `Connect to SSH Password` and configure authentication with the `flowkit` ssh user you created at the beginning of the deployment.  
 **Always put `host.docker.internal` as the host and 22 as the port**:     
 ![w3](./media/ssh_workflow_3.png)  
+
+>[!TIP]
+> With the above config, SSH connection will work out of the box.  
+> In case it does not work, you have probably a firewall rule enabled on the flowkit host.  
 
 Add a code node to your workflow with this javascript inside:  
 ```javascript
